@@ -26,4 +26,10 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         </db:select>
         <json:object-to-json-transformer doc:name="Object to JSON"/>
     </flow>
+    <flow name="setPayloadAndOutboundProps">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/setpayload" doc:name="HTTP"/>
+        <set-payload value="Hello World !" doc:name="Set Payload"/>
+        <set-property propertyName="qpname" value="max" doc:name="Property"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
 </mule>
