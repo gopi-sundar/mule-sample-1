@@ -30,7 +30,12 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <http:listener config-ref="HTTP_Listener_Configuration" path="/setpayload" doc:name="HTTP"/>
         <flow-ref name="subflow1" doc:name="subflow1"/>
         <flow-ref name="subflow2" doc:name="subflow2"/>
+        <flow-ref name="flow2" doc:name="flow2"/>
         <logger message="requri-var: #[flowVars.'requri-var'] session-var: #[sessionVars.'ses-var-sample']" level="ERROR" doc:name="Logger"/>
+    </flow>
+    <flow name="flow2">
+        <set-payload value="Goodbye!" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
     </flow>
     <sub-flow name="subflow1">
         <set-payload value="#['Hello world'.toUpperCase()]" doc:name="Set Payload"/>
