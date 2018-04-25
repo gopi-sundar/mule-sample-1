@@ -28,8 +28,16 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     </flow>
     <flow name="setPayloadAndOutboundProps">
         <http:listener config-ref="HTTP_Listener_Configuration" path="/setpayload" doc:name="HTTP"/>
-        <set-payload value="Hello World !" doc:name="Set Payload"/>
-        <set-property propertyName="qpname" value="max" doc:name="Property"/>
-        <logger level="INFO" doc:name="Logger"/>
+        <flow-ref name="subflow1" doc:name="subflow1"/>
+        <flow-ref name="subflow2" doc:name="subflow2"/>
+        <logger message="requri-var: #[flowVars.'requri-var'] session-var: #[sessionVars.'ses-var-sample']" level="ERROR" doc:name="Logger"/>
     </flow>
+    <sub-flow name="subflow1">
+        <set-payload value="#['Hello world'.toUpperCase()]" doc:name="Set Payload"/>
+        <set-property propertyName="qpname" value="max" encoding="ISO-8859-6" doc:name="Property"/>
+    </sub-flow>
+    <sub-flow name="subflow2">
+        <set-variable variableName="requri-var" value="#[message.inboundProperties.'http.method']" doc:name="Variable"/>
+        <set-session-variable variableName="ses-var-sample" value="#[message.inboundProperties.'http.version']" encoding="ISO-8859-2" doc:name="Session Variable"/>
+    </sub-flow>
 </mule>
