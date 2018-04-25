@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:context="http://www.springframework.org/schema/context" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:context="http://www.springframework.org/schema/context" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
@@ -8,7 +8,8 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
-http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd">
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
     <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="${http.port}" doc:name="HTTP Listener Configuration"/>
     <db:mysql-config name="MySQL_Configuration" host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" database="${db.database}" doc:name="MySQL Configuration"/>
     <context:property-placeholder location="american-${env}.properties"/>
@@ -31,11 +32,11 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <http:listener config-ref="HTTP_Listener_Configuration" path="/setpayload" doc:name="HTTP"/>
         <flow-ref name="subflow1" doc:name="subflow1"/>
         <flow-ref name="subflow2" doc:name="subflow2"/>
-        <http:request config-ref="HTTP_Request_Configuration" path="/flow2" method="GET" doc:name="HTTP flow2"/>
+        <vm:outbound-endpoint exchange-pattern="request-response" path="vmflow" doc:name="VM"/>
         <logger message="qpname: #[message.outboundProperties.qpname] || requri-var: #[flowVars.'requri-var'] ||  session-var: #[sessionVars.'ses-var-sample']" level="ERROR" doc:name="Logger"/>
     </flow>
     <flow name="flow2">
-        <http:listener config-ref="HTTP_Listener_Configuration" path="/flow2" doc:name="HTTP"/>
+        <vm:inbound-endpoint exchange-pattern="request-response" path="vmflow" doc:name="VM"/>
         <set-payload value="Goodbye!" doc:name="Set Payload"/>
         <logger level="INFO" doc:name="Logger"/>
     </flow>
