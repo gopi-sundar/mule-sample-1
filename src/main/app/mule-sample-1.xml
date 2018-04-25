@@ -12,6 +12,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="${http.port}" doc:name="HTTP Listener Configuration"/>
     <db:mysql-config name="MySQL_Configuration" host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" database="${db.database}" doc:name="MySQL Configuration"/>
     <context:property-placeholder location="american-${env}.properties"/>
+    <http:request-config name="HTTP_Request_Configuration" host="localhost" port="8081" doc:name="HTTP Request Configuration"/>
     <flow name="getFlights">
         <http:listener config-ref="HTTP_Listener_Configuration" path="/flights" doc:name="HTTP" allowedMethods="GET"/>
         <db:select config-ref="MySQL_Configuration" doc:name="Database">
@@ -30,10 +31,11 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <http:listener config-ref="HTTP_Listener_Configuration" path="/setpayload" doc:name="HTTP"/>
         <flow-ref name="subflow1" doc:name="subflow1"/>
         <flow-ref name="subflow2" doc:name="subflow2"/>
-        <flow-ref name="flow2" doc:name="flow2"/>
-        <logger message="requri-var: #[flowVars.'requri-var'] session-var: #[sessionVars.'ses-var-sample']" level="ERROR" doc:name="Logger"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/flow2" method="GET" doc:name="HTTP flow2"/>
+        <logger message="qpname: #[message.outboundProperties.qpname] || requri-var: #[flowVars.'requri-var'] ||  session-var: #[sessionVars.'ses-var-sample']" level="ERROR" doc:name="Logger"/>
     </flow>
     <flow name="flow2">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/flow2" doc:name="HTTP"/>
         <set-payload value="Goodbye!" doc:name="Set Payload"/>
         <logger level="INFO" doc:name="Logger"/>
     </flow>
