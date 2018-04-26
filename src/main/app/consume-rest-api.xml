@@ -56,5 +56,10 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
         <logger level="INFO" doc:name="Logger"/>
         <object-to-string-transformer doc:name="Object to String"/>
     </flow>
+    <flow name="filterExample">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/filterexample" doc:name="HTTP"/>
+        <set-payload value="hELLO WORLD" doc:name="Set Payload"/>
+        <payload-type-filter expectedType="java.lang.Integer" doc:name="Payload"/>
+    </flow>
     
 </mule>
