@@ -17,5 +17,9 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
     <context:property-placeholder location="american-${env}.properties"/>
     <http:request-config name="HTTP_Request_Configuration" host="localhost" port="8081" doc:name="HTTP Request Configuration"/>
     <http:request-config name="United_REST_API_Configuration" host="${united.host}" port="80" doc:name="HTTP Request Configuration"/>
+     <catch-exception-strategy name="global_catch_exception_strategy" doc:name="Catch Exception Strategy">
+         <set-payload value="No fligths to #[flowVars.code + '\n' + exception]" doc:name="Set Payload"/>
+         <logger level="INFO" doc:name="Logger"/>
+     </catch-exception-strategy>
 
 </mule>
