@@ -18,5 +18,43 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
         <set-variable variableName="x" value="#[1/0]" doc:name="Variable"/>
         <logger message="HTTP status: #[message.inboundProperties] || MessageBody: #[message.payloadAs(java.lang.String)]" level="INFO" doc:name="Logger"/>
     </flow>
+    <flow name="getUnitedChoiceRouter">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/unitedchoice" allowedMethods="GET" doc:name="HTTP"/>
+        <logger level="INFO" doc:name="Logger"/>
+        <choice doc:name="Choice">
+            <when expression="#[message.inboundProperties.'http.query.params'.id == 1]">
+                <set-payload value="You hit the first route" doc:name="Set Payload 1"/>
+            </when>
+            <when expression="#[message.inboundProperties.'http.query.params'.id == 2]">
+                <set-payload value="You hit the second route" doc:name="Set Payload 2"/>
+            </when>
+            <otherwise>
+                <set-payload value="You hit the default route " doc:name="Set Payload"/>
+                <logger level="INFO" doc:name="Logger"/>
+            </otherwise>
+        </choice>
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-payload value="Error occured while executing expression #[exception]" doc:name="Set Payload"/>
+        </catch-exception-strategy>
+    </flow>
+    <flow name="scatterGatherExample">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/scattergather" doc:name="HTTP"/>
+        <scatter-gather doc:name="Scatter-Gather">
+            <processor-chain>
+                <set-payload value="123" doc:name="Set Payload"/>
+                <logger message="#[message.payloadAs(java.lang.String)]" level="INFO" doc:name="Logger"/>
+            </processor-chain>
+            <processor-chain>
+                <set-payload value="456" doc:name="Set Payload"/>
+                <logger message="#[message.payloadAs(java.lang.String)]" level="INFO" doc:name="Logger"/>
+            </processor-chain>
+            <processor-chain>
+                <set-payload value="789" doc:name="Set Payload"/>
+                <logger message="#[message.payloadAs(java.lang.String)]" level="INFO" doc:name="Logger"/>
+            </processor-chain>
+        </scatter-gather>
+        <logger level="INFO" doc:name="Logger"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+    </flow>
     
 </mule>
