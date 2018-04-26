@@ -17,7 +17,6 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
         </http:request>
         <set-variable variableName="x" value="#[1/0]" doc:name="Variable"/>
         <logger message="HTTP status: #[message.inboundProperties] || MessageBody: #[message.payloadAs(java.lang.String)]" level="INFO" doc:name="Logger"/>
-        <exception-strategy ref="global_catch_exception_strategy" doc:name="Reference Exception Strategy"/>
     </flow>
     
 </mule>
