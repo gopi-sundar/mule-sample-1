@@ -15,7 +15,11 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
                 <http:uri-param paramName="destination" value="#[flowVars.code]"/>
             </http:request-builder>
         </http:request>
+        <set-variable variableName="x" value="#[1/0]" doc:name="Variable"/>
         <logger message="HTTP status: #[message.inboundProperties] || MessageBody: #[message.payloadAs(java.lang.String)]" level="INFO" doc:name="Logger"/>
-        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <catch-exception-strategy doc:name="Catch Exception Strategy">
+            <set-payload value="No fligths to #[flowVars.code + '\n' + exception]" doc:name="Set Payload"/>
+            <logger level="INFO" doc:name="Logger"/>
+        </catch-exception-strategy>
     </flow>
 </mule>
