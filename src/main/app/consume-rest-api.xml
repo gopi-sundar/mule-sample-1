@@ -66,9 +66,6 @@ http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mu
         <http:listener config-ref="HTTP_Listener_Configuration" path="/validation" doc:name="HTTP"/>
         <validation:is-not-empty message="Payload is empty" value="#[payload]" doc:name="Validation"/>
         <set-payload value="#[validator.validateEmail()]" doc:name="Set Payload"/>
-        <catch-exception-strategy when="#[exception.message == 'Payload is empty']" doc:name="Catch Exception Strategy">
-            <set-payload value="Hello. No results. " doc:name="Set Payload"/>
-        </catch-exception-strategy>
     </flow>
     
 </mule>
