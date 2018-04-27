@@ -8,7 +8,7 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
     <flow name="polldatabaseFlow" processingStrategy="synchronous">
         <poll doc:name="Poll">
-            <fixed-frequency-scheduler frequency="5" timeUnit="SECONDS"/>
+            <fixed-frequency-scheduler frequency="5" timeUnit="DAYS"/>
             <watermark variable="lastAccountID" default-expression="0" selector="MAX" selector-expression="#[payload.accountID]"/>
             <db:select config-ref="MySQL_Configuration" doc:name="Database">
                 <db:parameterized-query><![CDATA[Select * from accounts where postal='11056' and accountID > #[flowVars.lastAccountID]]]></db:parameterized-query>
